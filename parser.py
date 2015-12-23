@@ -69,7 +69,7 @@ def parseyarh(data):
                             stack.append((indent, node))
                             parent = node
                             inline = True
-                        node = Comment(parent, indent, " " * (lineindent + indent) + line[1:].lstrip(), inline=inline)
+                        node = Comment(parent, indent, " " * (lineindent + indent) + line[1:], inline=inline)
                         if node.rawtext.strip():
                             node.inline = True
                         line = ""
