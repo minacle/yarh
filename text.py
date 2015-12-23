@@ -12,12 +12,12 @@ class Text(Node):
 
     @property
     def text(self):
-        childrenindent = " " * (self.totalindent + self.indent)
+        childrenindent = " " * self.totalindent
         return self.rawtext[len(childrenindent):].replace("\n" + childrenindent, "\n")
 
     @text.setter
     def text(self, value):
-        childrenindent = " " * (self.totalindent + self.indent)
+        childrenindent = " " * self.totalindent
         self.rawtext = childrenindent + value.replace("\n", "\n" + childrenindent)
 
     def html(self):
@@ -26,7 +26,7 @@ class Text(Node):
             text = self.rawtext.strip()
             builder.write(html.escape(text) if self.escape else text)
         else:
-            childrenindent = " " * (self.totalindent + self.indent)
+            childrenindent = " " * (self.totalindent - self.indent)
             for line in self.text.split("\n"):
                 builder.write(childrenindent)
                 builder.write(line)

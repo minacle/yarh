@@ -12,17 +12,17 @@ class Comment(Node):
 
     @property
     def text(self):
-        childrenindent = " " * (self.totalindent + self.indent)
+        childrenindent = " " * self.totalindent
         return self.rawtext[len(childrenindent):].replace("\n" + childrenindent, "\n")
 
     @text.setter
     def text(self, value):
-        childrenindent = " " * (self.totalindent + self.indent)
+        childrenindent = " " * self.totalindent
         self.rawtext = childrenindent + value.replace("\n", "\n" + childrenindent)
 
     def html(self):
         builder = StringIO()
-        baseindent = " " * self.totalindent
+        baseindent = " " * (self.totalindent - self.indent)
         builder.write(baseindent)
         builder.write("<!--")
         if self.inline:
