@@ -4,7 +4,6 @@ from .document import Document
 from .dtd import DTD, doctypes
 from .element import Element
 from .text import Text
-from pprint import pprint
 import re
 
 re_indent = re.compile(r"^ +")
@@ -29,7 +28,6 @@ def parseyarh(data):
             del stack[-1]
         line = line[lineindent:]
         indent = lineindent - sum(item[0] for item in stack)
-        print("%d %d" % (lineindent, indent))
         parent = stack[-1][1] if stack else None
         node = None
         if isinstance(parent, (Text, Comment)):
@@ -139,6 +137,4 @@ def parseyarh(data):
             else:
                 root.children.append(node)
             stack.append((indent, node))
-    print()
-    print(root.html())
     return root
