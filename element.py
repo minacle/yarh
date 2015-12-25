@@ -8,12 +8,11 @@ escapable_raw_text_elements = ["textarea", "title"]
 
 class Element(Node):
 
-    def __init__(self, parent, indent, tagname, idname="", classname="", name=""):
+    def __init__(self, parent, indent, tagname, idname="", classname=""):
         super().__init__(parent, indent)
         self.tagname = tagname
         self.idname = idname
         self.classname = classname
-        self.name = name
         self.attributes = []
         self.children = []
 
@@ -29,8 +28,6 @@ class Element(Node):
             builder.write(' id="%s"' % self.idname)
         if self.classname:
             builder.write(' class="%s"' % self.classname)
-        if self.name:
-            builder.write(' name="%s"' % self.name)
         for attribute in self.attributes:
             builder.write(" ")
             builder.write(attribute.html())
