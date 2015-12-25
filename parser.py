@@ -115,6 +115,7 @@ def parseyarh(data):
                     line = line[1:]
                 elif line.startswith("'") or line.startswith('"'): #scrap
                     if node:
+                        node.inlinechild = True
                         if parent:
                             parent.children.append(node)
                         else:
