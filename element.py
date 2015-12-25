@@ -21,7 +21,6 @@ class Element(Node):
         builder = StringIO()
         before = self.before()
         inline = before and before.inlinenext or self.parent and self.parent.inlinechild or self.inline
-        print(inline)
         if not inline:
             builder.write(" " * self.totalindent)
         builder.write("<")
