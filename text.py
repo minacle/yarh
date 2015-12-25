@@ -23,7 +23,9 @@ class Text(Node):
 
     def html(self):
         builder = StringIO()
-        if self.inline:
+        before = self.before()
+        after = self.after()
+        if self.inline or before and before.inlinenext or self.parent and self.parent.inlinechild:
             text = self.rawtext.strip()
             if self.escape:
                 parent = self.findparent(type=Element)
@@ -31,12 +33,15 @@ class Text(Node):
                 if parent:
                     escape = parent.isrt()
                 builder.write(html.escape(text, quote=False) if escape else text)
+            if after and (not after.inline or self.inlinenext):
+                builder.write("\n")
         else:
             childrenindent = " " * (self.totalindent - self.indent)
             for line in self.text.split("\n"):
                 builder.write(childrenindent)
                 builder.write(line)
                 builder.write("\n")
+                first = False
         result = builder.getvalue()
         builder.close()
         return result

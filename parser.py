@@ -51,6 +51,7 @@ def parseyarh(data):
                         root = Document(doctypes["html"])
                 if line.startswith(":"): #text
                     if node:
+                        node.inlinechild = True
                         if parent:
                             parent.children.append(node)
                         else:
@@ -105,6 +106,7 @@ def parseyarh(data):
                     line = line[len(match.group(0)):]
                 elif line.startswith(";"): #inline
                     if node:
+                        node.inlinechild = True
                         if parent:
                             parent.children.append(node)
                         else:
@@ -112,6 +114,13 @@ def parseyarh(data):
                         stack.append((indent, node))
                         parent = node
                         node = None
+                    elif parent:
+                        parent.inlinenext = True
+                        del stack[-1]
+                        if stack:
+                            parent = stack[-1][1]
+                        else:
+                            parent = None
                     inline = True
                     line = line[1:]
                 else:

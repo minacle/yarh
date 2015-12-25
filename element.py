@@ -16,11 +16,13 @@ class Element(Node):
         self.name = name
         self.attributes = []
         self.children = []
-        self.inline = False
 
     def html(self):
         builder = StringIO()
-        if not self.inline:
+        before = self.before()
+        inline = before and before.inlinenext or self.parent and self.parent.inlinechild or self.inline
+        print(inline)
+        if not inline:
             builder.write(" " * self.totalindent)
         builder.write("<")
         builder.write(self.tagname)
@@ -35,15 +37,15 @@ class Element(Node):
             builder.write(attribute.html())
         builder.write(">")
         if not self.isvoid():
+            if self.children and not inline and not self.inlinechild:
+                builder.write("\n")
             if self.children:
                 for child in self.children:
-                    if not child.inline and builder.getvalue()[-1] != "\n":
-                        builder.write("\n")
                     builder.write(child.html())
                 if builder.getvalue()[-1] == "\n":
                     builder.write(" " * self.totalindent)
             builder.write("</%s>" % self.tagname)
-        if not self.inline:
+        if not (self.inline or self.inlinenext):
             builder.write("\n")
         result = builder.getvalue()
         builder.close()
