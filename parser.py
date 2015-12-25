@@ -38,99 +38,97 @@ def parseyarh(data):
         else:
             inline = False
             while line:
-                if not root and line.startswith("!"): #dtd
-                    text = line[1:].strip()
-                    if text in doctypes:
-                        dtd = doctypes[text]
+                if not root:
+                    if line.startswith("!"): #dtd
+                        text = line[1:].strip()
+                        if text in doctypes:
+                            dtd = doctypes[text]
+                        else:
+                            dtd = DTD(text)
+                        root = Document(dtd)
+                        line = ""
                     else:
-                        dtd = DTD(text)
-                    root = Document(dtd)
-                    line = ""
-                elif root:
-                    if line.startswith(":"): #text
-                        if node:
-                            if parent:
-                                parent.children.append(node)
-                            else:
-                                root.children.append(node)
-                            stack.append((indent, node))
-                            parent = node
-                            inline = True
-                        node = Text(parent, indent, " " * (lineindent + indent) + line[1:].strip(), inline=inline)
-                        if not node.rawtext.strip():
-                            node.escape = False
-                        line = ""
-                    elif line.startswith("-"): #comment
-                        if node:
-                            if parent:
-                                parent.children.append(node)
-                            else:
-                                root.children.append(node)
-                            stack.append((indent, node))
-                            parent = node
-                            inline = True
-                        node = Comment(parent, indent, " " * (lineindent + indent) + line[1:], inline=inline)
-                        if node.rawtext.strip():
-                            node.inline = True
-                        line = ""
-                    elif line.startswith("#"): #id
-                        match = re_id.match(line)
-                        if not match:
-                            line = line[1:].lstrip()
-                            continue
-                        if node:
-                            node.idname = match.group("id")
+                        root = Document(doctypes["html"])
+                if line.startswith(":"): #text
+                    if node:
+                        if parent:
+                            parent.children.append(node)
                         else:
-                            node = Element(parent, indent, "div", idname=match.group("id"))
-                        line = line[len(match.group(0)):]
-                    elif line.startswith("."): #class
-                        match = re_class.match(line)
-                        if not match:
-                            line = line[1:].lstrip()
-                            continue
-                        if node:
-                            node.classname = (node.classname + " " + match.group("class")).lstrip()
-                        else:
-                            node = Element(parent, indent, "div", classname=match.group("class"))
-                        line = line[len(match.group(0)):]
-                    elif line.startswith("'") or line.startswith('"'): #name
-                        match = re_name.match(line)
-                        if not match:
-                            line = line[1:].lstrip()
-                            continue
-                        if node:
-                            node.name = match.group("name")
-                        else:
-                            node = Element(parent, indent, "div", name=match.group("name"))
-                        line = line[len(match.group(0)):]
-                    elif line.startswith(";"): #inline
-                        if node:
-                            if parent:
-                                parent.children.append(node)
-                            else:
-                                root.children.append(node)
-                            stack.append((indent, node))
-                            parent = node
-                            node = None
+                            root.children.append(node)
+                        stack.append((indent, node))
+                        parent = node
                         inline = True
-                        line = line[1:]
-                    else:
-                        if not node:
-                            match = re_tag.match(line)
-                            if not match:
-                                line = line[1:].lstrip()
-                                continue
-                            node = Element(parent, indent, match.group("tag"))
-                            node.inline = inline
+                    node = Text(parent, indent, " " * (lineindent + indent) + line[1:].strip(), inline=inline)
+                    line = ""
+                elif line.startswith("-"): #comment
+                    if node:
+                        if parent:
+                            parent.children.append(node)
                         else:
-                            match = re_attrib.match(line)
-                            if not match:
-                                line = line[1:].lstrip()
-                                continue
-                            node.attributes.append(Attribute(node, match.group("key"), match.group("value")))
-                        line = line[len(match.group(0)):]
+                            root.children.append(node)
+                        stack.append((indent, node))
+                        parent = node
+                        inline = True
+                    node = Comment(parent, indent, " " * (lineindent + indent) + line[1:], inline=inline)
+                    if node.rawtext.strip():
+                        node.inline = True
+                    line = ""
+                elif line.startswith("#"): #id
+                    match = re_id.match(line)
+                    if not match:
+                        line = line[1:].lstrip()
+                        continue
+                    if node:
+                        node.idname = match.group("id")
+                    else:
+                        node = Element(parent, indent, "div", idname=match.group("id"))
+                    line = line[len(match.group(0)):]
+                elif line.startswith("."): #class
+                    match = re_class.match(line)
+                    if not match:
+                        line = line[1:].lstrip()
+                        continue
+                    if node:
+                        node.classname = (node.classname + " " + match.group("class")).lstrip()
+                    else:
+                        node = Element(parent, indent, "div", classname=match.group("class"))
+                    line = line[len(match.group(0)):]
+                elif line.startswith("'") or line.startswith('"'): #name
+                    match = re_name.match(line)
+                    if not match:
+                        line = line[1:].lstrip()
+                        continue
+                    if node:
+                        node.name = match.group("name")
+                    else:
+                        node = Element(parent, indent, "div", name=match.group("name"))
+                    line = line[len(match.group(0)):]
+                elif line.startswith(";"): #inline
+                    if node:
+                        if parent:
+                            parent.children.append(node)
+                        else:
+                            root.children.append(node)
+                        stack.append((indent, node))
+                        parent = node
+                        node = None
+                    inline = True
+                    line = line[1:]
                 else:
-                    line = line[1:].lstrip()
+                    if not node:
+                        match = re_tag.match(line)
+                        if not match:
+                            line = line[1:].lstrip()
+                            continue
+                        node = Element(parent, indent, match.group("tag"))
+                        node.inline = inline
+                    else:
+                        match = re_attrib.match(line)
+                        if not match:
+                            line = line[1:].lstrip()
+                            continue
+                        node.attributes.append(Attribute(node, match.group("key"), match.group("value")))
+                    line = line[len(match.group(0)):]
         if node:
             if parent:
                 parent.children.append(node)

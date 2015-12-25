@@ -1,3 +1,4 @@
+from .element import Element
 from .node import Node
 from io import StringIO
 import html
@@ -24,7 +25,12 @@ class Text(Node):
         builder = StringIO()
         if self.inline:
             text = self.rawtext.strip()
-            builder.write(html.escape(text) if self.escape else text)
+            if self.escape:
+                parent = self.findparent(type=Element)
+                escape = True
+                if parent:
+                    escape = parent.isrt()
+                builder.write(html.escape(text, quote=False) if escape else text)
         else:
             childrenindent = " " * (self.totalindent - self.indent)
             for line in self.text.split("\n"):
