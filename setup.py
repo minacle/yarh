@@ -1,10 +1,17 @@
 from setuptools import setup, find_packages
+from codecs import open
+from os import path
+
+root = path.abspath(path.dirname(__file__))
+
+with open(path.join(root, 'README.rst')) as f:
+    readme = f.read()
 
 setup(
     name='yarh',
     version='0.2', #phase2
     description='Yet Another Rough HTML',
-    #long_description=long_description,
+    long_description=readme,
     url='https://github.com/minacle/yarh',
     author='Mayu Laierlence',
     author_email='minacle@live.com',
