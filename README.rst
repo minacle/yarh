@@ -27,7 +27,7 @@ Usage
 
 As program:
 
-.. code-block:: none
+::
 
     yarh -- [YARH_STRING]
     yarh <YARH_FILE>...
