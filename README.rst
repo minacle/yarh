@@ -9,13 +9,13 @@ Installation
 
 Installation using ``pip`` is recommended.
 
-.. code-block:: console
+.. code-block:: shell
 
     pip install yarh
 
 Also you can clone from repository.
 
-.. code-block:: console
+.. code-block:: shell
 
     git clone https://github.com/minacle/yarh.git
     cd yarh
