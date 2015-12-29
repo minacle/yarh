@@ -9,7 +9,7 @@ with open(path.join(root, 'README.rst')) as f:
 
 setup(
     name='yarh',
-    version='0.2', #phase2
+    version='0.3', #phase3
     description='Yet Another Rough HTML',
     long_description=readme,
     url='https://github.com/minacle/yarh',
@@ -29,7 +29,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'yarh=yarh.__main__',
+            'yarh=yarh.__main__:main',
         ],
     },
 )
