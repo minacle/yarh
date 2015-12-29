@@ -33,3 +33,8 @@ class Document(YarhBase):
         result = builder.getvalue()
         builder.close()
         return result
+
+    def isxhtml(self):
+        if "http://www.w3.org/TR/xhtml" in self.dtd.content:
+            return True
+        return False

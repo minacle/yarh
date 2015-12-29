@@ -1,3 +1,4 @@
+from .document import Document
 from .node import Node
 from io import StringIO
 import html
@@ -18,8 +19,9 @@ class Element(Node):
 
     def html(self):
         builder = StringIO()
+        root = self.findparent(type=Document)
         before = self.before()
-        inline = before and before.inlinenext or self.parent and self.parent.inlinechild or self.inline
+        inline = before and before.inlinenext or self.parent and isinstance(self.parent, Node) and self.parent.inlinechild or self.inline
         if not inline:
             builder.write(" " * self.totalindent)
         builder.write("<")
@@ -31,7 +33,10 @@ class Element(Node):
         for attribute in self.attributes:
             builder.write(" ")
             builder.write(attribute.html())
-        builder.write(">")
+        if root.isxhtml() and (self.isvoid() or not self.children):
+            builder.write(" />")
+        else:
+            builder.write(">")
         if not self.isvoid():
             if self.children and not inline and not self.inlinechild:
                 builder.write("\n")

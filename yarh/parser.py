@@ -59,7 +59,7 @@ def parseyarh(data):
                         stack.append((indent, node))
                         parent = node
                         inline = True
-                    node = Text(parent, indent, " " * (lineindent + indent) + line[1:].strip(), inline=inline)
+                    node = Text(parent or root, indent, " " * (lineindent + indent) + line[1:].strip(), inline=inline)
                     line = ""
                 elif line.startswith("-"): #comment
                     if node:
@@ -70,7 +70,7 @@ def parseyarh(data):
                         stack.append((indent, node))
                         parent = node
                         inline = True
-                    node = Comment(parent, indent, " " * (lineindent + indent) + line[1:], inline=inline)
+                    node = Comment(parent or root, indent, " " * (lineindent + indent) + line[1:], inline=inline)
                     if node.rawtext.strip():
                         node.inline = True
                     line = ""
@@ -82,7 +82,7 @@ def parseyarh(data):
                     if node:
                         node.idname = match.group("id")
                     else:
-                        node = Element(parent, indent, "div", idname=match.group("id"))
+                        node = Element(parent or root, indent, "div", idname=match.group("id"))
                     line = line[len(match.group(0)):]
                 elif line.startswith("."): #class
                     match = re_class.match(line)
@@ -92,7 +92,7 @@ def parseyarh(data):
                     if node:
                         node.classname = (node.classname + " " + match.group("class")).lstrip()
                     else:
-                        node = Element(parent, indent, "div", classname=match.group("class"))
+                        node = Element(parent or root, indent, "div", classname=match.group("class"))
                     line = line[len(match.group(0)):]
                 elif line.startswith(";"): #inline
                     if node:
@@ -128,7 +128,7 @@ def parseyarh(data):
                         line = line[1:].lstrip()
                         continue
                     inline = True
-                    parent.children.append(Text(parent, 0, match.group("scrap"), inline=inline))
+                    parent.children.append(Text(parent or root, 0, match.group("scrap"), inline=inline))
                     line = line[len(match.group(0)):]
                 else:
                     if not node:
@@ -136,7 +136,7 @@ def parseyarh(data):
                         if not match:
                             line = line[1:].lstrip()
                             continue
-                        node = Element(parent, indent, match.group("tag"))
+                        node = Element(parent or root, indent, match.group("tag"))
                         node.inline = inline
                     else:
                         match = re_attrib.match(line)

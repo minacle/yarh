@@ -25,7 +25,7 @@ class Text(Node):
         builder = StringIO()
         before = self.before()
         after = self.after()
-        if self.inline or before and before.inlinenext or self.parent and self.parent.inlinechild:
+        if self.inline or before and before.inlinenext or self.parent and isinstance(self.parent, Node) and self.parent.inlinechild:
             text = self.rawtext.strip()
             if self.escape:
                 parent = self.findparent(type=Element)
