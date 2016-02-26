@@ -22,7 +22,7 @@ class Comment(Node):
 
     def html(self):
         builder = StringIO()
-        baseindent = " " * (self.totalindent - self.indent)
+        baseindent = " " * (self.totalindent)
         builder.write(baseindent)
         builder.write("<!--")
         if self.inline:
