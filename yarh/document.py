@@ -1,6 +1,7 @@
 from .base import YarhBase
 from io import StringIO
 
+
 class Document(YarhBase):
 
     def __init__(self, dtd):

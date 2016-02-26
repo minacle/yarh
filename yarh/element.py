@@ -7,6 +7,7 @@ void_elements = ["area", "base", "br", "col", "embed", "hr", "img", "input", "ke
 raw_text_elements = ["script", "style"]
 escapable_raw_text_elements = ["textarea", "title"]
 
+
 class Element(Node):
 
     def __init__(self, parent, indent, tagname, idname="", classname=""):

@@ -1,6 +1,7 @@
 from .base import YarhBase
 import html
 
+
 class Attribute(YarhBase):
 
     def __init__(self, parent, key, value=None):

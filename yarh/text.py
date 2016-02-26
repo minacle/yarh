@@ -3,6 +3,7 @@ from .node import Node
 from io import StringIO
 import html
 
+
 class Text(Node):
 
     def __init__(self, parent, indent, rawtext, inline=True, escape=True):

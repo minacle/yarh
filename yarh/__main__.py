@@ -1,6 +1,7 @@
 from . import parser
 import sys
 
+
 def main():
     if len(sys.argv) == 1:
         print("compile yarh to html")
@@ -23,6 +24,7 @@ def main():
     if not fromfile:
         print(parser.parseyarh(sys.stdin.read()).html())
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

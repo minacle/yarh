@@ -1,5 +1,6 @@
 from .base import YarhBase
 
+
 class DTD(YarhBase):
 
     def __init__(self, content, **kwargs):

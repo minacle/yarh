@@ -1,5 +1,6 @@
 from .base import YarhBase
 
+
 class Node(YarhBase):
 
     def __init__(self, parent, indent):

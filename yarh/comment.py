@@ -2,6 +2,7 @@ from .node import Node
 from io import StringIO
 import re
 
+
 class Comment(Node):
 
     def __init__(self, parent, indent, rawtext, inline=True, escape=True):

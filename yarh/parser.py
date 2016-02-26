@@ -14,6 +14,7 @@ re_class = re.compile(r"^\.(?P<class>[A-Za-z_][\w-]*)")
 re_attrib = re.compile(r"^(?P<key>[A-Za-z_][\w-]*)(?:=(\"|')(?P<value>.*?)\2)?")
 re_scrap = re.compile(r"^(\"|')(?P<scrap>.*?)?\1")
 
+
 def parseyarh(data):
     lines = data.split("\n")
     root = None
@@ -39,7 +40,7 @@ def parseyarh(data):
             inline = False
             while line:
                 if not root:
-                    if line.startswith("!"): #dtd
+                    if line.startswith("!"):  # dtd
                         text = line[1:].strip()
                         if text in doctypes:
                             dtd = doctypes[text]
@@ -49,7 +50,7 @@ def parseyarh(data):
                         line = ""
                     else:
                         root = Document(doctypes["html"])
-                if line.startswith(":"): #text
+                if line.startswith(":"):  # text
                     if node:
                         node.inlinechild = True
                         if parent:
@@ -61,7 +62,7 @@ def parseyarh(data):
                         inline = True
                     node = Text(parent or root, indent, " " * (lineindent + indent) + line[1:].strip(), inline=inline)
                     line = ""
-                elif line.startswith("-"): #comment
+                elif line.startswith("-"):  # comment
                     if node:
                         if parent:
                             parent.children.append(node)
@@ -74,7 +75,7 @@ def parseyarh(data):
                     if node.rawtext.strip():
                         node.inline = True
                     line = ""
-                elif line.startswith("#"): #id
+                elif line.startswith("#"):  # id
                     match = re_id.match(line)
                     if not match:
                         line = line[1:].lstrip()
@@ -84,7 +85,7 @@ def parseyarh(data):
                     else:
                         node = Element(parent or root, indent, "div", idname=match.group("id"))
                     line = line[len(match.group(0)):]
-                elif line.startswith("."): #class
+                elif line.startswith("."):  # class
                     match = re_class.match(line)
                     if not match:
                         line = line[1:].lstrip()
@@ -94,7 +95,7 @@ def parseyarh(data):
                     else:
                         node = Element(parent or root, indent, "div", classname=match.group("class"))
                     line = line[len(match.group(0)):]
-                elif line.startswith(";"): #inline
+                elif line.startswith(";"):  # inline
                     if node:
                         node.inlinechild = True
                         if parent:
@@ -113,7 +114,7 @@ def parseyarh(data):
                             parent = None
                     inline = True
                     line = line[1:]
-                elif line.startswith("'") or line.startswith('"'): #scrap
+                elif line.startswith("'") or line.startswith('"'):  # scrap
                     if node:
                         node.inlinechild = True
                         if parent:

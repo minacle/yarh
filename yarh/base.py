@@ -18,10 +18,10 @@ class YarhBase:
                 break
         if not findable:
             return self.parent
-        #type
+        # type
         if isinstance(self.parent, kwargs["type"]):
             return self.parent
         elif self.parent:
             return self.parent.findparent(**kwargs)
-        #i have no parent...
+        # i have no parent...
         return None
