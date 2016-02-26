@@ -26,7 +26,7 @@ class Comment(Node):
         builder.write(baseindent)
         builder.write("<!--")
         if self.inline:
-            text = self.rawtext.rstrip()
+            text = self.rawtext.rstrip()[self.totalindent + self.indent:]
             space = " " * (len(text) - len(text.lstrip(" ")))
             builder.write(text.replace("-->", "--/>") if self.escape else text)
             builder.write(space)
